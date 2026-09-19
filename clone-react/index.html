@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #172033;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 245px;
+      background: #172554;
+      color: white;
+      padding: 24px 16px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: bold;
+      padding: 0 12px 28px;
+    }
+
+    .brand span {
+      color: #93c5fd;
+    }
+
+    .nav-title {
+      color: #93a4c8;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 0 12px 8px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav button {
+      border: 0;
+      background: transparent;
+      color: #dbeafe;
+      text-align: left;
+      padding: 12px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: #1e3a8a;
+      color: white;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 245px;
+      width: calc(100% - 245px);
+      min-height: 100vh;
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 27px;
+    }
+
+    .topbar p {
+      margin: 5px 0 0;
+      color: #667085;
+      font-size: 14px;
+    }
+
+    /* STATISTICS */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .stat {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      color: #667085;
+      font-size: 13px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: bold;
+      margin-top: 7px;
+    }
+
+    /* VIEW PANE */
+    .view-pane {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* SEARCH */
+    input {
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font: inherit;
+      outline: none;
+      background: white;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px #dbeafe;
+    }
+
+    .search {
+      width: 280px;
+    }
+
+    /* BUTTON */
+    .btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .btn-secondary {
+      background: #eef2ff;
+      color: #1d4ed8;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 14px 12px;
+      border-bottom: 1px solid #eaecf0;
+      font-size: 13px;
+    }
+
+    th {
+      color: #667085;
+      font-weight: bold;
+      background: #f8fafc;
+    }
+
+    .student-name {
+      font-weight: bold;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .empty {
+      text-align: center;
+      color: #667085;
+      padding: 45px 10px;
+    }
+
+    /* MOBILE */
+    @media (max-width: 800px) {
+      .sidebar {
+        width: 200px;
+      }
+
+      .main {
+        margin-left: 200px;
+        width: calc(100% - 200px);
+        padding: 18px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      table {
+        min-width: 700px;
+      }
+
+      .view-pane {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="brand">
+      Student<span>Portal</span>
+    </div>
+
+    <div class="nav-title">
+      Navigation
+    </div>
+
+    <div class="nav">
+
+      <button
+        class="active"
+        data-view="overview">
+        Overview
+      </button>
+
+      <button
+        data-view="students">
+        Students
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <div class="topbar">
+
+      <div>
+        <h1 id="pageTitle">
+          Overview
+        </h1>
+
+        <p id="pageSubtitle">
+          A quick look at your student records.
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- OVERVIEW -->
+    <div id="overviewView">
+
+      <div class="stats">
+
+        <div class="stat">
+          <div class="stat-label">
+            Total Students
+          </div>
+
+          <div
+            class="stat-value"
+            id="totalStudents">
+            0
+          </div>
+        </div>
+
+
+        <div class="stat">
+          <div class="stat-label">
+            Active Students
+          </div>
+
+          <div
+            class="stat-value"
+            id="activeStudents">
+            0
+          </div>
+        </div>
+
+
+        <div class="stat">
+          <div class="stat-label">
+            Programs
+          </div>
+
+          <div
+            class="stat-value"
+            id="programCount">
+            0
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="view-pane">
+
+        <div class="section-head">
+
+          <h2>
+            Recently Added
+          </h2>
+
+          <button
+            class="btn btn-secondary"
+            onclick="showStudents()">
+            View all students
+          </button>
+
+        </div>
+
+        <div id="recentTable"></div>
+
+      </div>
+
+    </div>
+
+
+    <!-- STUDENTS -->
+    <div
+      id="studentsView"
+      style="display:none">
+
+      <div class="view-pane">
+
+        <div class="section-head">
+
+          <h2>
+            Student List
+          </h2>
+
+          <div class="actions">
+
+            <input
+              class="search"
+              id="searchInput"
+              placeholder="Search name, ID, email, or program..."
+              oninput="renderStudents()">
+
+          </div>
+
+        </div>
+
+        <div id="studentsTable"></div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<script>
+
+/* =========================
+   STUDENT DATA
+========================= */
+
+const STORAGE_KEY =
+  "studentPortalStudents";
+
+let students =
+  JSON.parse(
+    localStorage.getItem(STORAGE_KEY) || "[]"
+  );
+
+
+/* =========================
+   UPDATE STATISTICS
+========================= */
+
+function updateStats() {
+
+  document.getElementById(
+    "totalStudents"
+  ).textContent = students.length;
+
+
+  document.getElementById(
+    "activeStudents"
+  ).textContent = students.length;
+
+
+  document.getElementById(
+    "programCount"
+  ).textContent =
+    new Set(
+      students.map(student => student.program)
+    ).size;
+}
+
+
+/* =========================
+   CREATE TABLE
+========================= */
+
+function tableMarkup(list) {
+
+  if (!list.length) {
+
+    return `
+      <div class="empty">
+        No students found.
+      </div>
+    `;
+
+  }
+
+
+  return `
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>Student ID</th>
+          <th>Student Name</th>
+          <th>Email</th>
+          <th>Program</th>
+          <th>Year</th>
+          <th>Status</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        ${list.map(student => `
+
+          <tr>
+
+            <td>
+              ${escapeHtml(student.id)}
+            </td>
+
+            <td class="student-name">
+              ${escapeHtml(student.name)}
+            </td>
+
+            <td>
+              ${escapeHtml(student.email)}
+            </td>
+
+            <td>
+              ${escapeHtml(student.program)}
+            </td>
+
+            <td>
+              ${escapeHtml(student.year)}
+            </td>
+
+            <td>
+              <span class="status">
+                Active
+              </span>
+            </td>
+
+          </tr>
+
+        `).join("")}
+
+      </tbody>
+
+    </table>
+  `;
+}
+
+
+/* =========================
+   SEARCH STUDENTS
+========================= */
+
+function renderStudents() {
+
+  const q =
+    document
+      .getElementById("searchInput")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  const filtered =
+    students.filter(student =>
+
+      [
+        student.id,
+        student.name,
+        student.email,
+        student.program,
+        student.year
+      ].some(value =>
+        value.toLowerCase().includes(q)
+      )
+
+    );
+
+
+  document.getElementById(
+    "studentsTable"
+  ).innerHTML =
+    tableMarkup(filtered);
+}
+
+
+/* =========================
+   RECENT STUDENTS
+========================= */
+
+function renderRecent() {
+
+  const recent =
+    students
+      .slice(-5)
+      .reverse();
+
+
+  document.getElementById(
+    "recentTable"
+  ).innerHTML =
+    tableMarkup(recent);
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHtml(value) {
+
+  return value.replace(
+    /[&<>"']/g,
+    character => ({
+
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+
+    }[character])
+  );
+}
+
+
+/* =========================
+   SHOW STUDENTS
+========================= */
+
+function showStudents() {
+
+  document.getElementById(
+    "overviewView"
+  ).style.display = "none";
+
+
+  document.getElementById(
+    "studentsView"
+  ).style.display = "block";
+
+
+  document.getElementById(
+    "pageTitle"
+  ).textContent = "Students";
+
+
+  document.getElementById(
+    "pageSubtitle"
+  ).textContent =
+    "Search and view the students in your records.";
+
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.view === "students"
+      );
+
+    });
+
+
+  renderStudents();
+}
+
+
+/* =========================
+   SHOW OVERVIEW
+========================= */
+
+function showOverview() {
+
+  document.getElementById(
+    "overviewView"
+  ).style.display = "block";
+
+
+  document.getElementById(
+    "studentsView"
+  ).style.display = "none";
+
+
+  document.getElementById(
+    "pageTitle"
+  ).textContent = "Overview";
+
+
+  document.getElementById(
+    "pageSubtitle"
+  ).textContent =
+    "A quick look at your student records.";
+
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.view === "overview"
+      );
+
+    });
+
+
+  renderRecent();
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+document
+  .querySelectorAll(".nav button")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        if (
+          button.dataset.view ===
+          "students"
+        ) {
+
+          showStudents();
+
+        } else {
+
+          showOverview();
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* =========================
+   INITIALIZE
+========================= */
+
+updateStats();
+
+renderStudents();
+
+renderRecent();
+
+</script>
+
+</body>
+</html>
