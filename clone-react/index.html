@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -153,7 +154,7 @@
       gap: 10px;
     }
 
-    /* SEARCH */
+    /* INPUT */
     input {
       border: 1px solid #d0d5dd;
       border-radius: 8px;
@@ -185,6 +186,60 @@
     .btn-secondary {
       background: #eef2ff;
       color: #1d4ed8;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-box {
+      width: min(500px, 92%);
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.2);
+    }
+
+    .modal-box h2 {
+      margin: 0 0 18px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .form-group input {
+      width: 100%;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
     }
 
     /* TABLE */
@@ -295,7 +350,6 @@
 
   </aside>
 
-
   <!-- MAIN CONTENT -->
   <main class="main">
 
@@ -313,7 +367,6 @@
 
     </div>
 
-
     <!-- OVERVIEW -->
     <div id="overviewView">
 
@@ -324,41 +377,32 @@
             Total Students
           </div>
 
-          <div
-            class="stat-value"
-            id="totalStudents">
+          <div class="stat-value" id="totalStudents">
             0
           </div>
         </div>
-
 
         <div class="stat">
           <div class="stat-label">
             Active Students
           </div>
 
-          <div
-            class="stat-value"
-            id="activeStudents">
+          <div class="stat-value" id="activeStudents">
             0
           </div>
         </div>
-
 
         <div class="stat">
           <div class="stat-label">
             Programs
           </div>
 
-          <div
-            class="stat-value"
-            id="programCount">
+          <div class="stat-value" id="programCount">
             0
           </div>
         </div>
 
       </div>
-
 
       <div class="view-pane">
 
@@ -382,7 +426,6 @@
 
     </div>
 
-
     <!-- STUDENTS -->
     <div
       id="studentsView"
@@ -404,6 +447,13 @@
               placeholder="Search name, ID, email, or program..."
               oninput="renderStudents()">
 
+            <!-- ADD STUDENT BUTTON -->
+            <button
+              class="btn btn-primary"
+              onclick="openAddStudent()">
+              + Add Student
+            </button>
+
           </div>
 
         </div>
@@ -418,15 +468,71 @@
 
 </div>
 
+<!-- ADD STUDENT FORM -->
+<div class="modal" id="studentModal">
+
+  <div class="modal-box">
+
+    <h2>Add Student</h2>
+
+    <form id="studentForm">
+
+      <div class="form-group">
+        <label>Student ID</label>
+        <input id="studentId" required>
+      </div>
+
+      <div class="form-group">
+        <label>Student Name</label>
+        <input id="studentName" required>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          id="studentEmail"
+          type="email"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label>Program</label>
+        <input id="studentProgram" required>
+      </div>
+
+      <div class="form-group">
+        <label>Year</label>
+        <input id="studentYear" required>
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onclick="closeAddStudent()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary">
+          Add Student
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
 
 <script>
 
-/* =========================
-   STUDENT DATA
-========================= */
+/* STUDENT DATA */
 
-const STORAGE_KEY =
-  "studentPortalStudents";
+const STORAGE_KEY = "studentPortalStudents";
 
 let students =
   JSON.parse(
@@ -434,9 +540,7 @@ let students =
   );
 
 
-/* =========================
-   UPDATE STATISTICS
-========================= */
+/* UPDATE STATISTICS */
 
 function updateStats() {
 
@@ -444,11 +548,9 @@ function updateStats() {
     "totalStudents"
   ).textContent = students.length;
 
-
   document.getElementById(
     "activeStudents"
   ).textContent = students.length;
-
 
   document.getElementById(
     "programCount"
@@ -459,9 +561,7 @@ function updateStats() {
 }
 
 
-/* =========================
-   CREATE TABLE
-========================= */
+/* CREATE TABLE */
 
 function tableMarkup(list) {
 
@@ -474,7 +574,6 @@ function tableMarkup(list) {
     `;
 
   }
-
 
   return `
     <table>
@@ -535,9 +634,7 @@ function tableMarkup(list) {
 }
 
 
-/* =========================
-   SEARCH STUDENTS
-========================= */
+/* SEARCH STUDENTS */
 
 function renderStudents() {
 
@@ -547,7 +644,6 @@ function renderStudents() {
       .value
       .toLowerCase()
       .trim();
-
 
   const filtered =
     students.filter(student =>
@@ -564,7 +660,6 @@ function renderStudents() {
 
     );
 
-
   document.getElementById(
     "studentsTable"
   ).innerHTML =
@@ -572,9 +667,7 @@ function renderStudents() {
 }
 
 
-/* =========================
-   RECENT STUDENTS
-========================= */
+/* RECENT STUDENTS */
 
 function renderRecent() {
 
@@ -583,7 +676,6 @@ function renderRecent() {
       .slice(-5)
       .reverse();
 
-
   document.getElementById(
     "recentTable"
   ).innerHTML =
@@ -591,9 +683,7 @@ function renderRecent() {
 }
 
 
-/* =========================
-   SECURITY
-========================= */
+/* SECURITY */
 
 function escapeHtml(value) {
 
@@ -612,9 +702,144 @@ function escapeHtml(value) {
 }
 
 
-/* =========================
-   SHOW STUDENTS
-========================= */
+/* ADD STUDENT */
+
+function openAddStudent() {
+
+  document.getElementById(
+    "studentModal"
+  ).style.display = "flex";
+
+  document.getElementById(
+    "studentForm"
+  ).reset();
+
+  document.getElementById(
+    "studentId"
+  ).focus();
+}
+
+
+function closeAddStudent() {
+
+  document.getElementById(
+    "studentModal"
+  ).style.display = "none";
+}
+
+
+/* SUBMIT ADD STUDENT */
+
+document
+  .getElementById("studentForm")
+  .addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+      const newStudent = {
+
+        id:
+          document
+            .getElementById("studentId")
+            .value
+            .trim(),
+
+        name:
+          document
+            .getElementById("studentName")
+            .value
+            .trim(),
+
+        email:
+          document
+            .getElementById("studentEmail")
+            .value
+            .trim(),
+
+        program:
+          document
+            .getElementById("studentProgram")
+            .value
+            .trim(),
+
+        year:
+          document
+            .getElementById("studentYear")
+            .value
+            .trim()
+
+      };
+
+
+      /* CHECK DUPLICATE ID */
+
+      if (
+        students.some(
+          student =>
+            student.id === newStudent.id
+        )
+      ) {
+
+        alert(
+          "Student ID already exists."
+        );
+
+        return;
+      }
+
+
+      /* ADD STUDENT */
+
+      students.push(newStudent);
+
+
+      /* SAVE */
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(students)
+      );
+
+
+      /* UPDATE */
+
+      updateStats();
+      renderStudents();
+      renderRecent();
+
+      closeAddStudent();
+
+      alert(
+        "Student added successfully!"
+      );
+
+    }
+  );
+
+
+/* CLOSE MODAL WHEN CLICKING OUTSIDE */
+
+document
+  .getElementById("studentModal")
+  .addEventListener(
+    "click",
+    function(event) {
+
+      if (
+        event.target === this
+      ) {
+
+        closeAddStudent();
+
+      }
+
+    }
+  );
+
+
+/* SHOW STUDENTS */
 
 function showStudents() {
 
@@ -622,22 +847,18 @@ function showStudents() {
     "overviewView"
   ).style.display = "none";
 
-
   document.getElementById(
     "studentsView"
   ).style.display = "block";
-
 
   document.getElementById(
     "pageTitle"
   ).textContent = "Students";
 
-
   document.getElementById(
     "pageSubtitle"
   ).textContent =
     "Search and view the students in your records.";
-
 
   document
     .querySelectorAll(".nav button")
@@ -650,14 +871,11 @@ function showStudents() {
 
     });
 
-
   renderStudents();
 }
 
 
-/* =========================
-   SHOW OVERVIEW
-========================= */
+/* SHOW OVERVIEW */
 
 function showOverview() {
 
@@ -665,22 +883,18 @@ function showOverview() {
     "overviewView"
   ).style.display = "block";
 
-
   document.getElementById(
     "studentsView"
   ).style.display = "none";
-
 
   document.getElementById(
     "pageTitle"
   ).textContent = "Overview";
 
-
   document.getElementById(
     "pageSubtitle"
   ).textContent =
     "A quick look at your student records.";
-
 
   document
     .querySelectorAll(".nav button")
@@ -693,14 +907,11 @@ function showOverview() {
 
     });
 
-
   renderRecent();
 }
 
 
-/* =========================
-   NAVIGATION
-========================= */
+/* NAVIGATION */
 
 document
   .querySelectorAll(".nav button")
@@ -711,8 +922,7 @@ document
       () => {
 
         if (
-          button.dataset.view ===
-          "students"
+          button.dataset.view === "students"
         ) {
 
           showStudents();
@@ -729,17 +939,15 @@ document
   });
 
 
-/* =========================
-   INITIALIZE
-========================= */
+/* INITIALIZE */
 
 updateStats();
-
 renderStudents();
-
 renderRecent();
 
 </script>
 
 </body>
 </html>
+```
+
